@@ -1,3 +1,10 @@
 run `make' then "mono MHashTest.exe"
 
+The idea behind this is to see if you can save pinvoke costs to the same data structures in a mixed language environment by
+having (unsafe, of course) C# code which mirrors the C code and touches the same memory in the same way.
 
+It appears to be very easy dealing with the actual hashtable memory (MHashNode, etc), but we run into the expected problems with
+the marshaling of keys and values.  In the case of g_direct_hash (which we use extensively in moonlight), the keys are easily handled
+-- they're just IntPtrs and never marshaled.  Dealing with values is a little tougher.  In Moonlight they're always of type Mono.Value,
+which again should be something we can handle, but in the general case it'll require another layer and more code on both sides. GCHandles,
+perhaps. Yuck.
